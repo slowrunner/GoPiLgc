@@ -1,3 +1,6 @@
+# Alan's IGNORES
+Examples/Oak-D-Lite/intro/depthai/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
