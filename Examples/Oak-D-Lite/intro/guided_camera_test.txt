@@ -1,0 +1,26 @@
+$ python3 guided_manual_test.py 
+Starting manual test procedure. Press the [ESC] key to abort.
+Using depthai module from:  /home/pi/.local/lib/python3.7/site-packages/depthai.cpython-37m-arm-linux-gnueabihf.so
+Depthai version installed:  2.13.3.0
+libEGL warning: DRI2: failed to authenticate
+qt5ct: using qt5ct plugin
+Setting up demo...
+Available devices:
+[0] 184430101175A41200 [X_LINK_UNBOOTED]
+Floating point exception
+Error while running demo script... Command '"/usr/bin/python3" depthai_demo.py -dev 184430101175A41200 --noSupervisor --guiType qt' returned non-zero exit status 136.
+Waiting 5s for the device to be discoverable again...
+Setting up demo...
+Available devices:
+[0] 184430101175A41200 [X_LINK_UNBOOTED]
+USB Connection speed: UsbSpeed.HIGH
+Enabling low-bandwidth mode due to low USB speed... (speed: UsbSpeed.HIGH)
+Creating MJPEG link for ColorCamera node and color xlink stream...
+Stopping demo...
+=== TOTAL FPS ===
+[color]: 3.4
+[disparity]: 3.4
+[disparityColor]: 3.4
+[nn]: 3.5
+...
+
