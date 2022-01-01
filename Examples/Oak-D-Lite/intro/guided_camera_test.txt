@@ -33,3 +33,45 @@ pi        1807  1743  0 10:03 ?        00:00:03 lxpanel --profile LXDE-pi
 pi        1808  1743  0 10:03 ?        00:00:01 pcmanfm --desktop --profile LXDE-pi
 pi        3863  1999  0 10:35 pts/1    00:00:00 grep --color=auto X
 
+
+
+
+Other Features Test
+Traceback (most recent call last):
+  File "depthai_demo.py", line 991, in <module>
+    runOpenCv()
+  File "depthai_demo.py", line 981, in runOpenCv
+    demo.run_all(confManager)
+  File "depthai_demo.py", line 119, in run_all
+    self.run()
+  File "depthai_demo.py", line 328, in run
+    self.loop()
+  File "depthai_demo.py", line 402, in loop
+    self._nnManager.draw(self._pv, self._nnData)
+  File "/home/pi/GoPiLgc/Examples/Oak-D-Lite/intro/depthai/depthai_sdk/src/depthai_sdk/managers/nnet_manager.py", line 310, in draw
+    drawDetection(frame, detection)
+  File "/home/pi/GoPiLgc/Examples/Oak-D-Lite/intro/depthai/depthai_sdk/src/depthai_sdk/managers/nnet_manager.py", line 281, in drawDetection
+    bbox = frameNorm(self._normFrame(frame), [detection.xmin, detection.ymin, detection.xmax, detection.ymax])
+  File "/home/pi/GoPiLgc/Examples/Oak-D-Lite/intro/depthai/depthai_sdk/src/depthai_sdk/utils.py", line 30, in frameNorm
+    normVals[::2] = frame.shape[1]
+IndexError: tuple index out of range
+Traceback (most recent call last):
+  File "/home/pi/GoPiLgc/Examples/Oak-D-Lite/intro/depthai/depthai_demo.py", line 1004, in <module>
+    s.runDemo(args)
+  File "/home/pi/GoPiLgc/Examples/Oak-D-Lite/intro/depthai/depthai_helpers/supervisor.py", line 46, in runDemo
+    subprocess.check_call(' '.join([f'"{sys.executable}"', "depthai_demo.py"] + new_args), env=new_env, shell=True, cwd=repo_root)
+  File "/usr/lib/python3.7/subprocess.py", line 347, in check_call
+    raise CalledProcessError(retcode, cmd)
+subprocess.CalledProcessError: Command '"/usr/bin/python3" depthai_demo.py -dev 184430101175A41200 -sync -s left right color nnInput depth --noSupervisor --guiType cv' returned non-zero exit status 1.
+Sentry is attempting to send 2 pending error messages
+Waiting up to 2 seconds
+Press Ctrl-C to quit
+Traceback (most recent call last):
+  File "guided_manual_test.py", line 282, in <module>
+    test_other()
+  File "guided_manual_test.py", line 247, in test_other
+    subprocess.check_call([*demo_call, "-sync", "-s", "left", "right", "color", "nnInput", "depth"])
+  File "/usr/lib/python3.7/subprocess.py", line 347, in check_call
+    raise CalledProcessError(retcode, cmd)
+subprocess.CalledProcessError: Command '['/usr/bin/python3', '/home/pi/GoPiLgc/Examples/Oak-D-Lite/intro/depthai/depthai_demo.py', '-dev', '184430101175A41200', '-sync', '-s', 'left', 'right', 'color', 'nnInput', 'depth']' returned non-zero exit status 1.
+
