@@ -37,6 +37,27 @@ pi        3863  1999  0 10:35 pts/1    00:00:00 grep --color=auto X
 
 
 Other Features Test
+...
+Error while running demo script... Command '"/usr/bin/python3" depthai_demo.py -dev 184430101175A41200 -sync -s left right color nnInput depth --noSupervisor --guiType qt' returned non-zero exit status 136.
+Waiting 5s for the device to be discoverable again...
+Setting up demo...
+Available devices:
+[0] 184430101175A41200 [X_LINK_UNBOOTED]
+USB Connection speed: UsbSpeed.HIGH
+Enabling low-bandwidth mode due to low USB speed... (speed: UsbSpeed.HIGH)
+Creating MJPEG link for MonoCamera node and left xlink stream...
+Creating MJPEG link for MonoCamera node and right xlink stream...
+Stopping demo...
+=== TOTAL FPS ===
+[left]: 0.0
+[right]: 0.0
+[color]: 0.0
+[nnInput]: 0.0
+[depthRaw]: 0.0
+[depth]: 0.0
+[nn]: 0.0
+
+
 Traceback (most recent call last):
   File "depthai_demo.py", line 991, in <module>
     runOpenCv()
