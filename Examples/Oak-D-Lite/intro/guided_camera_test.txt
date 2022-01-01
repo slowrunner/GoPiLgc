@@ -24,3 +24,12 @@ Stopping demo...
 [nn]: 3.5
 ...
 
+
+
+$ ps -ef | grep X
+root       550   515  0 09:46 tty7     00:00:24 /usr/lib/xorg/Xorg :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch
+pi        1743   622  0 10:03 ?        00:00:00 /usr/bin/lxsession -s LXDE-pi -e LXDE
+pi        1807  1743  0 10:03 ?        00:00:03 lxpanel --profile LXDE-pi
+pi        1808  1743  0 10:03 ?        00:00:01 pcmanfm --desktop --profile LXDE-pi
+pi        3863  1999  0 10:35 pts/1    00:00:00 grep --color=auto X
+
