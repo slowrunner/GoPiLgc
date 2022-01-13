@@ -6,19 +6,11 @@ import cv2
 import depthai as dai
 import numpy as np
 import time
-import argparse
 
 '''
 Spatial Tiny-yolo example
   Performs inference on RGB camera and retrieves spatial location coordinates: x,y,z relative to the center of depth map.
   Using  tiny-yolo-v4 network
-
-USAGE:  spatial_tiny_yolo.py [-h] [-d]
-
-optional arguments:
-  -h, --help     show this help message and exit
-  -d, --display  display annotated rgb image
-
 
 ANALYSIS:
  - Returning rgb preview annotated with object boundary and spacial x,y,z data, and full depthmap
@@ -37,12 +29,6 @@ nnBlobPath = str((Path(__file__).parent / Path('../models/yolo-v4-tiny-tf_openvi
 #        nnBlobPath = arg
 #else:
 #    print("Using Tiny YoloV4 model. If you wish to use Tiny YOLOv3, call 'tiny_yolo.py yolo3'")
-
-# ARGUMENT PARSER
-ap = argparse.ArgumentParser()
-ap.add_argument("-d", "--display", default=False, action='store_true', help="display annotated rgb image")
-args = vars(ap.parse_args())
-showVideo = args['display']
 
 if not Path(nnBlobPath).exists():
     raise FileNotFoundError('Required YOLO v4 blob not found')
@@ -203,21 +189,7 @@ with dai.Device(pipeline) as device:
 
         cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, color)
         # cv2.imshow("depth", depthFrameColor)
-        if showVideo:
-            cv2.imshow("rgb", frame)
+        cv2.imshow("rgb", frame)
 
         if cv2.waitKey(1) == ord('q'):
             break
-
-        print("NN fps: {:<5.1f}    ".format(fps),end="\r")
-        if len(detections) != 0:
-            for detection in detections:
-                try:
-                    label = labelMap[detection.label]
-                except:
-                    label = str(detection.label)
-                x = int(detection.spatialCoordinates.x)
-                y = int(detection.spatialCoordinates.y)
-                z = int(detection.spatialCoordinates.z)
-                print("\n{:<10s} X:{:<5d}  Y:{:<5d}  Z:{:<5d} mm".format(label, x, y, z))
-            print(" ")
