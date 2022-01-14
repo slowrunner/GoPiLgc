@@ -17,16 +17,13 @@ USAGE:  spatial_tiny_yolo.py [-h] [-d]
 
 optional arguments:
   -h, --help     show this help message and exit
-  -d, --display  display annotated rgb image
+  -d, --display  display annotated rgb images and depth map
 
 
-ANALYSIS:
- - Returning rgb preview annotated with object boundary and spacial x,y,z data, and full depthmap
-   20 FPS Ave RPi3B+ load 4.0 Temp: 65degC (no throttling, soft temp limit flag set)
 '''
 
-# Get argument first
 nnBlobPath = str((Path(__file__).parent / Path('../models/yolo-v4-tiny-tf_openvino_2021.4_6shave.blob')).resolve().absolute())
+# Get argument first
 # if 1 < len(sys.argv):
 #    arg = sys.argv[1]
 #    if arg == "yolo3":
@@ -40,7 +37,7 @@ nnBlobPath = str((Path(__file__).parent / Path('../models/yolo-v4-tiny-tf_openvi
 
 # ARGUMENT PARSER
 ap = argparse.ArgumentParser()
-ap.add_argument("-d", "--display", default=False, action='store_true', help="display annotated rgb image")
+ap.add_argument("-d", "--display", default=False, action='store_true', help="display annotated rgb images and depthmap")
 args = vars(ap.parse_args())
 showVideo = args['display']
 
@@ -145,15 +142,16 @@ with dai.Device(pipeline) as device:
     color = (255, 255, 255)
 
     while True:
-        inPreview = previewQueue.get()
+        if showVideo:
+            inPreview = previewQueue.get()
+            depth = depthQueue.get()
+            frame = inPreview.getCvFrame()
+            depthFrame = depth.getFrame()
+            depthFrameColor = cv2.normalize(depthFrame, None, 255, 0, cv2.NORM_INF, cv2.CV_8UC1)
+            depthFrameColor = cv2.equalizeHist(depthFrameColor)
+            depthFrameColor = cv2.applyColorMap(depthFrameColor, cv2.COLORMAP_HOT)
         inDet = detectionNNQueue.get()
-        depth = depthQueue.get()
 
-        frame = inPreview.getCvFrame()
-        depthFrame = depth.getFrame()
-        depthFrameColor = cv2.normalize(depthFrame, None, 255, 0, cv2.NORM_INF, cv2.CV_8UC1)
-        depthFrameColor = cv2.equalizeHist(depthFrameColor)
-        depthFrameColor = cv2.applyColorMap(depthFrameColor, cv2.COLORMAP_HOT)
 
         counter+=1
         current_time = time.monotonic()
@@ -163,7 +161,8 @@ with dai.Device(pipeline) as device:
             startTime = current_time
 
         detections = inDet.detections
-        if len(detections) != 0:
+        if showVideo:
+          if len(detections) != 0:
             boundingBoxMapping = xoutBoundingBoxDepthMappingQueue.get()
             roiDatas = boundingBoxMapping.getConfigData()
 
@@ -180,10 +179,10 @@ with dai.Device(pipeline) as device:
                 cv2.rectangle(depthFrameColor, (xmin, ymin), (xmax, ymax), color, cv2.FONT_HERSHEY_SCRIPT_SIMPLEX)
 
 
-        # If the frame is available, draw bounding boxes on it and show the frame
-        height = frame.shape[0]
-        width  = frame.shape[1]
-        for detection in detections:
+          # If the frame is available, draw bounding boxes on it and show the frame
+          height = frame.shape[0]
+          width  = frame.shape[1]
+          for detection in detections:
             # Denormalize bounding box
             x1 = int(detection.xmin * width)
             x2 = int(detection.xmax * width)
@@ -201,14 +200,15 @@ with dai.Device(pipeline) as device:
 
             cv2.rectangle(frame, (x1, y1), (x2, y2), color, cv2.FONT_HERSHEY_SIMPLEX)
 
-        cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, color)
-        # cv2.imshow("depth", depthFrameColor)
-        if showVideo:
-            cv2.imshow("rgb", frame)
+          cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, color)
+          cv2.imshow("depth", depthFrameColor)
+          cv2.imshow("rgb", frame)
 
         if cv2.waitKey(1) == ord('q'):
             break
 
+
+        # Output FPS and detections to console
         print("NN fps: {:<5.1f}    ".format(fps),end="\r")
         if len(detections) != 0:
             for detection in detections:
