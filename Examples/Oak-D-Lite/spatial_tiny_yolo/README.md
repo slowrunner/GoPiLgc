@@ -25,11 +25,15 @@ Spatial Tiny-yolo example
   Performs inference on RGB camera and retrieves spatial location coordinates: x (h), y (v), z (range) relative to device  
   Using  tiny-yolo-v4 network and 
 
-ANALYSIS:  
+ANALYSIS (Raspberry Pi 3B+ Legacy Pi OS 2021-12 Ave load 0.02 45degC 5.93 Watts 0.52A at 11.4V):  
  - Returning rgb preview annotated with object boundary and spacial x,y,z data, and full depthmap display  
-   13-19 FPS Ave RPi3B+ load 4.0-5.5 Temp: 65degC (no throttling, soft temp limit flag set)  
-
+   13-19 FPS Ave RPi3B+ load 4.0 (peak 5.5) Temp: 65degC (no throttling, soft temp limit 0x8 flag set)  
+   (displayed on remote desktop via VNC)  
+   12.4 Watts (1.2A at 10.4V)  
+   
  - Returning YoloSpatialDetection label with x,y,z data  
-   24-27 FPS Ave RPi3B+ load 1.0 Temp: 49degC (no throttling, soft temp limit flag set)
-
+   24-27 FPS Ave RPi3B+ load 1.0 (peak 1.75) Temp: 49degC (no throttling, no flags)  
+   10.5 Watts (0.96A at 10.9V) ~ 4.5 Watts for Oak-D-Lite operation  
+   
+   
 
