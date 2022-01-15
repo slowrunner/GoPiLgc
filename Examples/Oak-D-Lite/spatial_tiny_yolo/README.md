@@ -27,7 +27,9 @@ Spatial Tiny-yolo (with optional image, objects, and depth display)
   Performs inference on RGB camera and retrieves spatial location coordinates: x (h), y (v), z (range) relative to device  
   Using  tiny-yolo-v4 network on rgb camerafor object recognition and stereo depth network on left+right greyscale cameras 
 
-# ANALYSIS (Raspberry Pi 3B+ Legacy Pi OS 2021-12 Ave load 0.02 41degC 5.8 Watts 0.49A at 11.8V):  
+# ANALYSIS (Raspberry Pi 3B+ Legacy Pi OS 2021-12):
+
+ - Base: Ave load 0.02 (0.2 w/VNC desktop) 41degC 5.8 Watts 0.49A at 11.8V
 
  - Returning rgb preview annotated with object boundary and spacial x,y,z data, and full depthmap display  
    13-19 FPS Ave RPi3B+ load 4.0 (peak 5.5) Temp: 65degC (no throttling, soft temp limit 0x8 flag set)  
@@ -35,7 +37,7 @@ Spatial Tiny-yolo (with optional image, objects, and depth display)
    12.4 Watts (1.2A at 10.4V)  
    ~ 6.6 Watts for Oak-D-Lite and display load  
    ~ 4.0 ave load - 100% of four cores at maximum processor frequency  
-   ~ 18degC processor temperature load (unaspirated heatsink)
+   ~ 18degC processor temperature load (unaspirated heatsink)  
 
 ```
  10:44:56 up 55 min,  3 users,  load average: 5.48, 4.89, 2.78
