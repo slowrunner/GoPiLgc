@@ -96,3 +96,12 @@ person     X:-829   Y:398    Z:2873  mm
 NN fps: 30.0     
 chair      X:138    Y:264    Z:2730  mm
 ```
+
+
+```
+pi@PIOSLGCY:~/GoPiLgc $ cat /etc/os-release 
+PRETTY_NAME="Raspbian GNU/Linux 10 (buster)"
+
+pi@PIOSLGCY:~/GoPiLgc $ uname -a
+Linux PIOSLGCY 5.10.63-v7+ #1496 SMP Wed Dec 1 15:58:11 GMT 2021 armv7l GNU/Linux
+```
