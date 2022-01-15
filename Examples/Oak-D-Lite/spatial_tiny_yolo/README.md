@@ -59,6 +59,8 @@ chair      X:112    Y:301    Z:2717  mm
 
 ```
 
+![Spatial_Tiny_Yolo on RPi3B+](Oak-D-Lite_Spatial_Tiny_Yolo_RPi3Bplus.jpg?raw=true)
+
 
 
  - Returning console only YoloSpatialDetection label with x,y,z data  
