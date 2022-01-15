@@ -72,15 +72,17 @@ monoLeft = pipeline.create(dai.node.MonoCamera)
 monoRight = pipeline.create(dai.node.MonoCamera)
 stereo = pipeline.create(dai.node.StereoDepth)
 
-xoutRgb = pipeline.create(dai.node.XLinkOut)
+if showVideo:
+    xoutRgb = pipeline.create(dai.node.XLinkOut)
+    xoutBoundingBoxDepthMapping = pipeline.create(dai.node.XLinkOut)
+    xoutDepth = pipeline.create(dai.node.XLinkOut)
 xoutNN = pipeline.create(dai.node.XLinkOut)
-xoutBoundingBoxDepthMapping = pipeline.create(dai.node.XLinkOut)
-xoutDepth = pipeline.create(dai.node.XLinkOut)
 
-xoutRgb.setStreamName("rgb")
+if showVideo:
+    xoutRgb.setStreamName("rgb")
+    xoutBoundingBoxDepthMapping.setStreamName("boundingBoxDepthMapping")
+    xoutDepth.setStreamName("depth")
 xoutNN.setStreamName("detections")
-xoutBoundingBoxDepthMapping.setStreamName("boundingBoxDepthMapping")
-xoutDepth.setStreamName("depth")
 
 # Properties
 camRgb.setPreviewSize(416, 416)
@@ -116,25 +118,30 @@ monoLeft.out.link(stereo.left)
 monoRight.out.link(stereo.right)
 
 camRgb.preview.link(spatialDetectionNetwork.input)
-if syncNN:
-    spatialDetectionNetwork.passthrough.link(xoutRgb.input)
-else:
-    camRgb.preview.link(xoutRgb.input)
+
+if showVideo:
+    if syncNN:
+        spatialDetectionNetwork.passthrough.link(xoutRgb.input)
+    else:
+        camRgb.preview.link(xoutRgb.input)
 
 spatialDetectionNetwork.out.link(xoutNN.input)
-spatialDetectionNetwork.boundingBoxMapping.link(xoutBoundingBoxDepthMapping.input)
+if showVideo:
+    spatialDetectionNetwork.boundingBoxMapping.link(xoutBoundingBoxDepthMapping.input)
 
 stereo.depth.link(spatialDetectionNetwork.inputDepth)
-spatialDetectionNetwork.passthroughDepth.link(xoutDepth.input)
+if showVideo:
+    spatialDetectionNetwork.passthroughDepth.link(xoutDepth.input)
 
 # Connect to device and start pipeline
 with dai.Device(pipeline) as device:
 
     # Output queues will be used to get the rgb frames and nn data from the outputs defined above
-    previewQueue = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
+    if showVideo:
+        previewQueue = device.getOutputQueue(name="rgb", maxSize=4, blocking=False)
+        xoutBoundingBoxDepthMappingQueue = device.getOutputQueue(name="boundingBoxDepthMapping", maxSize=4, blocking=False)
+        depthQueue = device.getOutputQueue(name="depth", maxSize=4, blocking=False)
     detectionNNQueue = device.getOutputQueue(name="detections", maxSize=4, blocking=False)
-    xoutBoundingBoxDepthMappingQueue = device.getOutputQueue(name="boundingBoxDepthMapping", maxSize=4, blocking=False)
-    depthQueue = device.getOutputQueue(name="depth", maxSize=4, blocking=False)
 
     startTime = time.monotonic()
     counter = 0
@@ -180,29 +187,30 @@ with dai.Device(pipeline) as device:
 
 
           # If the frame is available, draw bounding boxes on it and show the frame
-          height = frame.shape[0]
-          width  = frame.shape[1]
-          for detection in detections:
-            # Denormalize bounding box
-            x1 = int(detection.xmin * width)
-            x2 = int(detection.xmax * width)
-            y1 = int(detection.ymin * height)
-            y2 = int(detection.ymax * height)
-            try:
-                label = labelMap[detection.label]
-            except:
-                label = detection.label
-            cv2.putText(frame, str(label), (x1 + 10, y1 + 20), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-            cv2.putText(frame, "{:.2f}".format(detection.confidence*100), (x1 + 10, y1 + 35), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-            cv2.putText(frame, f"X: {int(detection.spatialCoordinates.x)} mm", (x1 + 10, y1 + 50), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-            cv2.putText(frame, f"Y: {int(detection.spatialCoordinates.y)} mm", (x1 + 10, y1 + 65), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
-            cv2.putText(frame, f"Z: {int(detection.spatialCoordinates.z)} mm", (x1 + 10, y1 + 80), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
+          if showVideo:
+              height = frame.shape[0]
+              width  = frame.shape[1]
+              for detection in detections:
+                # Denormalize bounding box
+                x1 = int(detection.xmin * width)
+                x2 = int(detection.xmax * width)
+                y1 = int(detection.ymin * height)
+                y2 = int(detection.ymax * height)
+                try:
+                    label = labelMap[detection.label]
+                except:
+                    label = detection.label
+                cv2.putText(frame, str(label), (x1 + 10, y1 + 20), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
+                cv2.putText(frame, "{:.2f}".format(detection.confidence*100), (x1 + 10, y1 + 35), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
+                cv2.putText(frame, f"X: {int(detection.spatialCoordinates.x)} mm", (x1 + 10, y1 + 50), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
+                cv2.putText(frame, f"Y: {int(detection.spatialCoordinates.y)} mm", (x1 + 10, y1 + 65), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
+                cv2.putText(frame, f"Z: {int(detection.spatialCoordinates.z)} mm", (x1 + 10, y1 + 80), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255)
 
-            cv2.rectangle(frame, (x1, y1), (x2, y2), color, cv2.FONT_HERSHEY_SIMPLEX)
+                cv2.rectangle(frame, (x1, y1), (x2, y2), color, cv2.FONT_HERSHEY_SIMPLEX)
 
-          cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, color)
-          cv2.imshow("depth", depthFrameColor)
-          cv2.imshow("rgb", frame)
+              cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, color)
+              cv2.imshow("depth", depthFrameColor)
+              cv2.imshow("rgb", frame)
 
         if cv2.waitKey(1) == ord('q'):
             break
