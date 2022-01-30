@@ -21,6 +21,11 @@ python3 orig_spatial_tiny_yolo.py
 optional arguments:
   -h, --help     show this help message and exit
   -d, --display  display annotated rgb images and depth map
+
+== Modified for results only, no image display
+
+./console_spatial_tiny_yolo.py  
+
 ```
 
 Spatial Tiny-yolo (with optional image, objects, and depth display)  
