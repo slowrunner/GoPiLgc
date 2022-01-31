@@ -23,7 +23,7 @@ class My_EasyGoPiGo3(EasyGoPiGo3):
 
 
     def __init__(self, config_file_path="/home/pi/Dexter/gpg3_config.json", use_mutex=True):
-        super().__init__(config_file_path=config_file_path)
+        super().__init__(config_file_path=config_file_path, use_mutex=use_mutex)
 
     def stop_with_power_off(self):
         self.set_motor_dps(self.MOTOR_LEFT + self.MOTOR_RIGHT, 0)
