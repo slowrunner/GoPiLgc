@@ -17,9 +17,11 @@ import sys
 sys.path.insert(1,'/home/pi/GoPiLgc/plib')
 import speak
 
-MOTOR_FLOAT = -128
 
 class My_EasyGoPiGo3(EasyGoPiGo3):
+    MOTOR_FLOAT = -128
+
+
     def __init__(self, config_file_path="/home/pi/Dexter/gpg3_config.json", use_mutex=True):
         super().__init__(config_file_path=config_file_path)
 
@@ -35,7 +37,7 @@ class My_EasyGoPiGo3(EasyGoPiGo3):
 def main():  # TEST
     megpg = My_EasyGoPiGo3()
 
-    stmt="GOPIGO3 POWER-OFF TEST"
+    stmt="GO PI GO 3 POWER-OFF TEST"
     print(stmt)
     speak.say(stmt)
 
@@ -63,7 +65,7 @@ def main():  # TEST
 
 
     # First use motors to have them
-    stmt="CAUTION!! ABOUT TO MOVE FORWARD WITH drive_cm(10)"
+    stmt="CAUTION, ABOUT TO MOVE FORWARD WITH drive_cm(10)"
     print(stmt)
     speak.say(stmt)
     sleep(5)
@@ -102,7 +104,7 @@ def main():  # TEST
 
 
     # Now use motors with forward command 
-    stmt="CAUTION!! ABOUT TO MOVE for 1 second with forward() command"
+    stmt="CAUTION, ABOUT TO MOVE for 1 second with forward() command"
     print(stmt)
     speak.say(stmt)
     sleep(5)
