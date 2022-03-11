@@ -130,3 +130,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+tmp/life.log.bak
+Examples/first_vscode/.vscode/launch.json
+Examples/Oak-D-Lite/models/yolo-v4-tiny-tf_openvino_2021.4_6shave.blob
