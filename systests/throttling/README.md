@@ -1,11 +1,14 @@
 # Legacy PiOS DAVE Throttling Test
 
+* GoPiGo3 v3.x.x
+* 11.1v nominal Li-Ion Battery
 
 * Running stress -c 3 -t 300 just bumps the 60degC soft temp limit  
   (which does not trigger temperature throttling)
 * Running stress -c 4 -t 300 will reach 68degC, but will not trigger throttling
 
-Note: No under_voltage throttling occured in either test
+Note: No under_voltage throttling occured in either test  
+      Battery indicated 8W draw at 11.1v
 
 Running processes:
 - throttling.sh
